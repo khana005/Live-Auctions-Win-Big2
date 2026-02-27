@@ -1,12 +1,18 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = 'http://localhost:5000';
+// Use environment variable or fallback to localhost for development
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+
+// Check if we're in production
+const isProduction = import.meta.env.PROD || !import.meta.env.VITE_DEV_MODE;
 
 export const socket = io(SOCKET_URL, {
   autoConnect: false,
   reconnection: true,
   reconnectionDelay: 1000,
-  reconnectionAttempts: 5
+  reconnectionAttempts: isProduction ? 3 : 5,
+  // Use polling for production (WebSocket may not work)
+  transports: isProduction ? ['polling'] : ['websocket', 'polling']
 });
 
 // Socket event listeners

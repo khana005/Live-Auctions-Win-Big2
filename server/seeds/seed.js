@@ -11,7 +11,7 @@ const Auction = require('../models/Auction');
 const Bid = require('../models/Bid');
 
 // Connect to database
-const connectDB = require('../config/db');
+const { connectDB } = require('../config/db');
 
 const seedData = async () => {
   try {

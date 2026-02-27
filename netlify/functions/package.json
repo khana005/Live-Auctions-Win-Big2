@@ -1,0 +1,11 @@
+{
+  "name": "bidvault-functions",
+  "version": "1.0.0",
+  "description": "BidVault Netlify Functions",
+  "main": "auth.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.0"
+  }
+}

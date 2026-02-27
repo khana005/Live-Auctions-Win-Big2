@@ -1,12 +1,38 @@
 [build]
-  base = "client"
-  command = "npm install && npm run build"
-  publish = "dist"
+  command = "cd client && npm install && npm run build"
+  publish = "client/dist"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "22"
 
-# SPA routing - redirect all routes to index.html
+# API routes redirect to Netlify Functions
+[[redirects]]
+  from = "/api/auth/*"
+  to = "/.netlify/functions/auth"
+  status = 200
+
+[[redirects]]
+  from = "/api/auctions/*"
+  to = "/.netlify/functions/auctions"
+  status = 200
+
+[[redirects]]
+  from = "/api/bids/*"
+  to = "/.netlify/functions/bids"
+  status = 200
+
+[[redirects]]
+  from = "/api/users/*"
+  to = "/.netlify/functions/users"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/*"
+  to = "/.netlify/functions/admin"
+  status = 200
+
+# SPA routing - redirect all routes to index.html for the frontend
 [[redirects]]
   from = "/*"
   to = "/index.html"
