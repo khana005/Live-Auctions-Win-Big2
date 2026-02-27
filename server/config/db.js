@@ -1,31 +1,26 @@
 const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-
-let mongoServer;
 
 const connectDB = async () => {
   try {
-    // Start in-memory MongoDB server
-    mongoServer = await MongoMemoryServer.create();
-    const mongoUri = mongoServer.getUri();
+    // Get MongoDB URI from environment or use local fallback
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/bidvault';
     
     const conn = await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 5000,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
-    console.log(`MongoDB Memory Server Connected: ${conn.connection.host}`);
+    
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
     console.log(`Database: ${conn.connection.name}`);
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
-    console.log('Note: Server will run but database features will be unavailable.');
-    console.log('To fix: Install MongoDB locally or use MongoDB Atlas cloud database.');
+    
+    // Don't exit in production - allow server to run
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Note: Running in development mode without persistent database.');
+    }
   }
 };
 
-// Export function to stop the memory server when needed
-const stopMongoDB = async () => {
-  if (mongoServer) {
-    await mongoServer.stop();
-  }
-};
-
-module.exports = { connectDB, stopMongoDB };
+module.exports = { connectDB };
